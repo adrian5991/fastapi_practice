@@ -12,22 +12,36 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a three jobs
   build:
-    name: Build
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build the docker_compose
+      run: docker-compose up -d --build
+      
+  Deploy:
+    needs: build
+    runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - uses: actions/checkout@v2
       - name: executing ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST}}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          script: |
-            rm -rf fastapi_practice
-            git clone git@github.com:adrian5991/fastapi_practice.git
-            cd fastapi_practice
+        env:
+          PRIVATE_KEY: ${{ secrets.KEY }}
+          HOSTNAME: ${{ secrets.HOST}}
+          USER_NAME: ${{ secrets.USERNAME }}
+        
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            cd fastapi_practice &&
+            git checkout main &&
+            git fetch --all &&
+            git reset --hard origin/main &&
+            git pull origin main &&
             sudo docker-compose -f docker-compose.prod.yml up -d --build
+          '
