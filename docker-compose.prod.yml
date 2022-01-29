@@ -8,7 +8,7 @@ services:
       - .:/app
       - .:/tests
     ports:
-      - 8009:8000
+      - 8080:8000
     environment:
       - DATABASE_URL=postgresql://postgresprod:postgresprod@db:5432/postgresprod
     depends_on:
