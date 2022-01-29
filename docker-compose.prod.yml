@@ -1,0 +1,29 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0'
+    volumes:
+      - .:/app
+      - .:/tests
+    ports:
+      - 8009:8000
+    environment:
+      - DATABASE_URL=postgresql://postgresprod:postgresprod@db:5432/postgresprod
+    depends_on:
+      - db
+  
+  db:
+    image: postgres
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgresprod
+      - POSTGRES_PASSWORD=postgresprod
+      - POSTGRES_DB=postgresprod
+
+volumes:
+  postgres_data_prod:
