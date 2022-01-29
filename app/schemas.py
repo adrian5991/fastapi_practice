@@ -9,7 +9,7 @@ class Positions(str, Enum):
     sg = "SG"
     sf = "SF"
     pf = "PF"
-    C = "C"
+    c = "C"
 
 
 class PlayerModel(BaseModel):

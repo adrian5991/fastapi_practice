@@ -72,3 +72,13 @@ def test_get_player_by_id(test_db, data):
     response = client.get("/players/{}".format(created["id"]))
     assert response.status_code == 200
     assert response.json() == created
+
+
+def test_delete_player(test_db, data):
+    response = client.post("/players", json=data)
+    assert response.status_code == 201
+    created = response.json()
+
+    response = client.delete("/players/{}".format(created["id"]))
+    assert response.status_code == 200
+    assert response.json() == {"ok": True}

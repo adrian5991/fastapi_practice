@@ -46,3 +46,11 @@ def get_players(db: Session = Depends(get_db)):
 @app.post("/players", status_code=201, response_model=schemas.PlayerModel)
 def create_player(player: schemas.PlayerModel, db: Session = Depends(get_db)):
     return crud.create_player(db=db, player=player)
+
+
+@app.delete("/players/{player_id}")
+def delete_player(player_id: int, db: Session = Depends(get_db)):
+    player = crud.get_player_by_id(db, player_id)
+    if player is None:
+        raise HTTPException(404, detail="Player not found")
+    return crud.delete_player(db, player)

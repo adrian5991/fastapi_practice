@@ -25,8 +25,10 @@ def create_player(db: Session, player: schemas.PlayerModel):
     return db_player
 
 
-def delete_player(db: Session, player_id: int):
-    pass
+def delete_player(db: Session, player: schemas.PlayerModel):
+    db.delete(player)
+    db.commit()
+    return {"ok": True}
 
 
 def update_player(db: Session, player_id: int):
