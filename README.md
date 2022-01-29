@@ -4,3 +4,4 @@ This is a WIP and purely for practice:
 - Use PostgreSQL in a docker container as database
 - Deploy containers with Docker Compose on GCP Compute Engine VM
 - Automate deployment of containers on push to repo with Github Actions
+    - Basically, on a push: ssh into VM; git pull changes; docker-compose up
