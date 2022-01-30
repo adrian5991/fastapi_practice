@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  pull_request:
+  push: 
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run unit tests
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        # "actions/checkout" is an action which allows one to run things against the repo
+        uses: actions/checkout@v2
+
+      - name: Build the docker_compose
+        run: docker-compose build
+      
+      - name: Run tests
+        run: docker-compose run web python -m pytest
