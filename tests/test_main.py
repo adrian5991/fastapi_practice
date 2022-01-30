@@ -82,3 +82,6 @@ def test_delete_player(test_db, data):
     response = client.delete("/players/{}".format(created["id"]))
     assert response.status_code == 200
     assert response.json() == {"ok": True}
+
+def test_test():
+    assert 1 == 2
